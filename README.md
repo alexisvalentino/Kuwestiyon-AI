@@ -2,8 +2,6 @@
 
 A powerful Filipino-focused AI assistant with advanced capabilities for web search, PDF analysis, fact-checking, and more.
 
-![Kuwestiyon AI](app/icon.png)
-
 ## 🌟 Features
 
 - **Web Search**: Real-time internet search capabilities using DuckDuckGo API
