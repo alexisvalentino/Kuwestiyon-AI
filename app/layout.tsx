@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Kuwestiyon AI",
   description:
     "A Filipino GPT with web search, PDF analysis, fact-checking, link analysis, quick translation, and NLP SQL queries",
+  metadataBase: new URL('http://localhost:3000'),
   icons: {
     icon: "/icon.png",
   },
@@ -26,7 +27,7 @@ export const metadata: Metadata = {
       "A Filipino GPT with web search, PDF analysis, fact-checking, link analysis, quick translation, and NLP SQL queries",
     images: ["/icon.png"],
   },
-    generator: 'v0.dev'
+  generator: 'v0.dev'
 }
 
 export default function RootLayout({
@@ -42,7 +43,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'
