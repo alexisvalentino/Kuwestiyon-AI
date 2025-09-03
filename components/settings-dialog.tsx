@@ -8,10 +8,8 @@ import { Switch } from "@/components/ui/switch"
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 const models = [
-  { id: "mistral-tiny", name: "Mistral Tiny" },
-  { id: "mistral-small", name: "Mistral Small" },
-  { id: "mistral-medium", name: "Mistral Medium" },
-  { id: "deepseek-chat", name: "DeepSeek R1" },
+  { id: "mistral-small", name: "Kuwestiyon 3.1" },
+  { id: "gemini-1.5-flash", name: "Kuwestiyon 4" },
 ]
 
 interface SettingsDialogProps {
@@ -63,20 +61,12 @@ export function SettingsDialog({
               <Label className="text-base font-medium">Select Model</Label>
               <RadioGroup value={selectedModel} onValueChange={setSelectedModel} className="space-y-2">
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="mistral-tiny" id="mistral-tiny" />
-                  <Label htmlFor="mistral-tiny">Mistral Tiny</Label>
-                </div>
-                <div className="flex items-center space-x-2">
                   <RadioGroupItem value="mistral-small" id="mistral-small" />
-                  <Label htmlFor="mistral-small">Mistral Small</Label>
+                  <Label htmlFor="mistral-small">Kuwestiyon 3.1</Label>
                 </div>
                 <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="mistral-medium" id="mistral-medium" />
-                  <Label htmlFor="mistral-medium">Mistral Medium</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="deepseek-chat" id="deepseek-chat" />
-                  <Label htmlFor="deepseek-chat">DeepSeek R1</Label>
+                  <RadioGroupItem value="gemini-1.5-flash" id="gemini-1.5-flash" />
+                  <Label htmlFor="gemini-1.5-flash">Kuwestiyon 4</Label>
                 </div>
               </RadioGroup>
             </div>

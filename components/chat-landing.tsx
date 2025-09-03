@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import type React from "react"
 
 import { useState, useRef, useEffect } from "react"
-import { Mic, FileText, Link, Search, Atom, CheckCircle, Languages, ArrowUp, Plus, Settings } from "lucide-react"
+import { Mic, ArrowUp, Settings } from "lucide-react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Card } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -62,7 +62,7 @@ export function ChatLanding({
   const [selectedPdfFile, setSelectedPdfFile] = useState<File | null>(null)
   const [isPdfUploading, setIsPdfUploading] = useState(false)
   const [uploadedPdfName, setUploadedPdfName] = useState("")
-  const [showFeatureMenu, setShowFeatureMenu] = useState(false)
+
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -133,38 +133,9 @@ export function ChatLanding({
     }
   }
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const menu = document.getElementById("feature-menu")
-      const button = document.querySelector("[data-feature-button]")
 
-      if (menu && !menu.contains(event.target as Node) && button && !button.contains(event.target as Node)) {
-        setShowFeatureMenu(false)
-      }
-    }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
 
-  // Add touch event handlers for better mobile experience
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      const menu = document.getElementById("feature-menu")
-      const button = document.querySelector("[data-feature-button]")
-
-      if (menu && !menu.contains(e.target as Node) && button && !button.contains(e.target as Node)) {
-        setShowFeatureMenu(false)
-      }
-    }
-
-    document.addEventListener("touchstart", handleTouchStart, { passive: true })
-    return () => {
-      document.removeEventListener("touchstart", handleTouchStart)
-    }
-  }, [])
 
   // Reset textarea when component mounts
   useEffect(() => {
@@ -196,16 +167,6 @@ export function ChatLanding({
                 <div className="flex items-center px-3 py-2">
                   <Button type="button" variant="ghost" size="icon" className="rounded-full" onClick={toggleRecording}>
                     <Mic className="h-5 w-5 text-gray-500" />
-                  </Button>
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="rounded-full"
-                    onClick={() => setShowFeatureMenu(!showFeatureMenu)}
-                    data-feature-button
-                  >
-                    <Plus className="h-5 w-5 text-gray-500" />
                   </Button>
                   <Button
                     type="button"
@@ -253,181 +214,7 @@ export function ChatLanding({
                 </div>
               </div>
 
-              {/* Feature menu dropdown */}
-              {showFeatureMenu && (
-                <div
-                  id="feature-menu"
-                  className="absolute bottom-full left-0 sm:left-12 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg p-1.5 sm:p-2 z-50 w-[200px] sm:w-[250px] max-w-[95vw] animate-in fade-in-50 slide-in-from-bottom-5 duration-200"
-                >
-                  <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        onSearchDialogOpen()
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Web Search</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsFactCheckDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Fact Check</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsPdfDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>PDF Analysis</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsTranslateDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Languages className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Translate</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        onLinkDialogOpen()
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Link className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Link Scan</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        // SIMULATION CODE - Replace this with actual database integration later
-                        // This is a temporary simulation of the Database Lookup functionality
 
-                        // Sample database schema for simulation
-                        // - government_employees (id, name, department, position, city, salary, hire_date)
-                        // - government_projects (id, name, department, budget, start_date, end_date, status)
-                        // - city_offices (id, city, address, department, employee_count, budget)
-                        // - budget_allocations (id, department, fiscal_year, amount, category)
-                        // - public_services (id, name, department, city, beneficiaries, annual_cost)
-
-                        // Get a random question to simulate user input
-                        const questions = [
-                          "How many government employees are there in Manila?",
-                          "How many government employees are there in Quezon City?",
-                          "What is the total budget for the infrastructure projects?",
-                          "How much budget was allocated to the Department of Education this year?",
-                          "Which city has the most government employees?",
-                          "How many infrastructure projects are currently ongoing?",
-                          "What is the average salary of government employees in Manila?",
-                          "How many employees work in the Department of Health?",
-                          "Which department has the highest budget allocation?",
-                          "How many public services are available in Quezon City?",
-                          "What is the total cost of public services in Manila?",
-                          "How many government employees were hired in the last fiscal year?",
-                          "What is the gender distribution of government employees?",
-                        ]
-
-                        const randomQuestion = questions[Math.floor(Math.random() * questions.length)]
-
-                        // Simulate SQL queries and results
-                        const sqlQueries = {
-                          "How many government employees are there in Manila?": {
-                            sql: "SELECT COUNT(*) FROM government_employees WHERE city = 'Manila'",
-                            result: "Result: 12,458 government employees in Manila",
-                          },
-                          "How many government employees are there in Quezon City?": {
-                            sql: "SELECT COUNT(*) FROM government_employees WHERE city = 'Quezon City'",
-                            result: "Result: 15,723 government employees in Quezon City",
-                          },
-                          "What is the total budget for the infrastructure projects?": {
-                            sql: "SELECT SUM(budget) FROM government_projects WHERE department = 'Department of Public Works and Highways' AND category = 'Infrastructure'",
-                            result: "Result: ₱24.7 billion total budget for infrastructure projects",
-                          },
-                          "How much budget was allocated to the Department of Education this year?": {
-                            sql: "SELECT SUM(amount) FROM budget_allocations WHERE department = 'Department of Education' AND fiscal_year = YEAR(CURDATE())",
-                            result: "Result: ₱782.6 million allocated to Department of Education this year",
-                          },
-                          "Which city has the most government employees?": {
-                            sql: "SELECT city, COUNT(*) as employee_count FROM government_employees GROUP BY city ORDER BY employee_count DESC LIMIT 1",
-                            result: "Result: Quezon City has the most government employees (15,723)",
-                          },
-                          "How many infrastructure projects are currently ongoing?": {
-                            sql: "SELECT COUNT(*) FROM government_projects WHERE status = 'Ongoing' AND category = 'Infrastructure'",
-                            result: "Result: 37 ongoing infrastructure projects",
-                          },
-                          "What is the average salary of government employees in Manila?": {
-                            sql: "SELECT AVG(salary) FROM government_employees WHERE city = 'Manila'",
-                            result: "Result: Average salary is ₱32,450.75 for government employees in Manila",
-                          },
-                          "How many employees work in the Department of Health?": {
-                            sql: "SELECT COUNT(*) FROM government_employees WHERE department = 'Department of Health'",
-                            result: "Result: 8,542 employees work in the Department of Health",
-                          },
-                          "Which department has the highest budget allocation?": {
-                            sql: "SELECT department, SUM(amount) as total_budget FROM budget_allocations WHERE fiscal_year = YEAR(CURDATE()) GROUP BY department ORDER BY total_budget DESC LIMIT 1",
-                            result:
-                              "Result: Department of Public Works and Highways has the highest budget allocation (₱1.2 billion)",
-                          },
-                          "How many public services are available in Quezon City?": {
-                            sql: "SELECT COUNT(*) FROM public_services WHERE city = 'Quezon City'",
-                            result: "Result: 78 public services available in Quezon City",
-                          },
-                          "What is the total cost of public services in Manila?": {
-                            sql: "SELECT SUM(annual_cost) FROM public_services WHERE city = 'Manila'",
-                            result: "Result: ₱567.3 million annual cost for public services in Manila",
-                          },
-                          "How many government employees were hired in the last fiscal year?": {
-                            sql: "SELECT COUNT(*) FROM government_employees WHERE hire_date >= DATE_SUB(CURDATE(), INTERVAL 1 YEAR)",
-                            result: "Result: 2,345 government employees were hired in the last fiscal year",
-                          },
-                          "What is the gender distribution of government employees?": {
-                            sql: "SELECT gender, COUNT(*) as count, ROUND(COUNT(*) * 100.0 / (SELECT COUNT(*) FROM government_employees), 2) as percentage FROM government_employees GROUP BY gender",
-                            result: "Result: Male: 23,456 (48.7%), Female: 24,678 (51.2%), Non-binary: 45 (0.1%)",
-                          },
-                        }
-
-                        // Set the simulated query and open the dialog
-                        const queryResult = sqlQueries[randomQuestion]
-                        setSimulatedQuery({
-                          question: randomQuestion,
-                          sql: queryResult.sql,
-                          result: queryResult.result,
-                        })
-                        setIsDatabaseDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Atom className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Database Lookup</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
             </Card>
           </form>
         </div>

@@ -199,14 +199,95 @@ async function callDeepSeekAPI(messages: any[], temperature: number) {
   }
 }
 
+// Add this function to handle Gemini API calls
+async function callGeminiAPI(messages: any[], temperature: number) {
+  try {
+    const API_KEY = process.env.GEMINI_API_KEY
+    const BASE_URL = "https://generativelanguage.googleapis.com/v1beta"
+
+    console.log("Calling Gemini API with model: gemini-1.5-flash")
+
+    // Filter out system messages as Gemini doesn't support them
+    const filteredMessages = messages.filter(msg => msg.role !== "system")
+    console.log(`Filtered out ${messages.length - filteredMessages.length} system messages`)
+    
+    // If we had system messages, inject the instruction into the first user message
+    let processedMessages = [...filteredMessages]
+    const systemMessages = messages.filter(msg => msg.role === "system")
+    
+    if (systemMessages.length > 0 && filteredMessages.length > 0) {
+      const firstUserMessage = filteredMessages.find(msg => msg.role === "user")
+      if (firstUserMessage) {
+        const systemInstruction = systemMessages.map(msg => msg.content).join('\n\n')
+        firstUserMessage.content = `${systemInstruction}\n\nUser message: ${firstUserMessage.content}`
+        console.log("Injected system instruction into first user message")
+      }
+    }
+    
+    // Convert messages to Gemini format
+    const geminiMessages = processedMessages.map(msg => ({
+      role: msg.role === "assistant" ? "model" : msg.role,
+      parts: [{ text: msg.content }]
+    }))
+    
+    console.log(`Sending ${geminiMessages.length} messages to Gemini API`)
+
+    const response = await fetch(`${BASE_URL}/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        contents: geminiMessages,
+        generationConfig: {
+          temperature: temperature,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 8192,
+        },
+      }),
+    })
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error(`Gemini API error (${response.status}): ${errorText}`)
+      throw new Error(`Gemini API error: ${response.status} - ${errorText}`)
+    }
+
+    const data = await response.json()
+    
+    // Convert Gemini response format to match our expected format
+    if (!data.candidates || data.candidates.length === 0) {
+      throw new Error("No response generated from Gemini API")
+    }
+    
+    const candidate = data.candidates[0]
+    if (!candidate.content || !candidate.content.parts || candidate.content.parts.length === 0) {
+      throw new Error("Invalid response format from Gemini API")
+    }
+    
+    return {
+      id: `gemini-${Date.now()}`,
+      choices: [{
+        message: {
+          content: candidate.content.parts[0].text || "No response generated"
+        }
+      }]
+    }
+  } catch (error) {
+    console.error("Error calling Gemini API:", error)
+    throw error
+  }
+}
+
 // Also update the POST function to include better error handling for the Llama model
 export async function POST(req: Request) {
   try {
     const { messages, url, pdfText, fileName, searchQuery, model, temperature } = await req.json()
     const userMessage = messages[messages.length - 1]?.content || ""
 
-    // Use the model from the request or default to mistral-tiny
-    const selectedModel = model || "mistral-tiny"
+    // Use the model from the request or default to gemini-1.5-flash
+    const selectedModel = model || "gemini-1.5-flash"
 
     // Use the temperature from the request or default to 0.7
     const selectedTemperature = temperature !== undefined ? temperature : 0.7
@@ -278,6 +359,17 @@ Your response MUST be based on the search results above, not your general knowle
 
     // Check which model we're using
     const isDeepSeekModel = selectedModel.startsWith("deepseek")
+    const isGeminiModel = selectedModel.startsWith("gemini")
+    
+    // Validate that the selected model is supported
+    const supportedModels = ["mistral-small", "gemini-1.5-flash"]
+    if (!supportedModels.includes(selectedModel)) {
+      return NextResponse.json({
+        id: `fallback-${Date.now()}`,
+        role: "assistant",
+        content: `The model "${selectedModel}" is not supported. Please select a supported model from the settings. (Fallback Mode)`,
+      })
+    }
 
     // Check for API keys
     if (isDeepSeekModel && !process.env.DEEPSEEK_API_KEY) {
@@ -288,13 +380,21 @@ Your response MUST be based on the search results above, not your general knowle
       })
     }
 
-    if (!isDeepSeekModel && !process.env.MISTRAL_API_KEY) {
+    if (isGeminiModel && !process.env.GEMINI_API_KEY) {
+      return NextResponse.json({
+        id: `fallback-${Date.now()}`,
+        role: "assistant",
+        content: "Gemini API key is not configured. Please check your environment variables. (Fallback Mode)",
+      })
+    }
+
+    if (!isDeepSeekModel && !isGeminiModel && !process.env.MISTRAL_API_KEY) {
       // No API key - use fallback
       const keywordResponse = getKeywordResponse(userMessage) || getFallbackResponse()
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: keywordResponse + " (Fallback Mode)",
+        content: keywordResponse + " (Fallback Mode - Please check your API keys for Mistral Small or Gemini 1.5 Flash)",
       })
     }
 
@@ -345,6 +445,21 @@ Your response MUST be based on the search results above, not your general knowle
             role: "assistant",
             content:
               "I encountered an issue connecting to the DeepSeek API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model. (Fallback Mode)",
+          })
+        }
+      } else if (isGeminiModel) {
+        try {
+          console.log("Using Gemini model with temperature:", selectedTemperature)
+          data = await callGeminiAPI(augmentedMessages, selectedTemperature)
+          console.log("Gemini API response received successfully")
+        } catch (error) {
+          console.error("Gemini API call failed:", error)
+          // Return a more specific error message
+          return NextResponse.json({
+            id: `fallback-${Date.now()}`,
+            role: "assistant",
+            content:
+              "I encountered an issue connecting to the Gemini API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model. (Fallback Mode)",
           })
         }
       } else {

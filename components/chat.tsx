@@ -5,18 +5,11 @@ import { useState, useRef, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
-  Link,
-  FileText,
   Settings,
   Mic,
   Trash,
   Copy,
   Volume2,
-  Search,
-  Atom,
-  CheckCircle,
-  Languages,
-  Plus,
   ArrowUp,
 } from "lucide-react"
 import {
@@ -95,7 +88,7 @@ export function Chat() {
   const [isMounted, setIsMounted] = useState(false)
 
   // Add temperature state
-  const [selectedModel, setSelectedModel] = useState("mistral-tiny")
+  const [selectedModel, setSelectedModel] = useState("gemini-1.5-flash")
   const [temperature, setTemperature] = useState(0.7)
 
   // Media query for responsive design
@@ -1028,42 +1021,11 @@ export function Chat() {
       })
   }
 
-  // Modify the return statement to conditionally render the landing page or chat interface
-  const isFeatureMenuOpen = useRef(false)
-  const [showFeatureMenu, setShowFeatureMenu] = useState(false)
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const menu = document.getElementById("feature-menu")
-      const button = document.querySelector("[data-feature-button]")
 
-      if (menu && !menu.contains(event.target as Node) && button && !button.contains(event.target as Node)) {
-        setShowFeatureMenu(false)
-      }
-    }
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
-  }, [])
 
-  // Add touch event handlers for better mobile experience
-  useEffect(() => {
-    const handleTouchStart = (e: TouchEvent) => {
-      const menu = document.getElementById("feature-menu")
-      const button = document.querySelector("[data-feature-button]")
 
-      if (menu && !menu.contains(e.target as Node) && button && !button.contains(e.target as Node)) {
-        setShowFeatureMenu(false)
-      }
-    }
-
-    document.addEventListener("touchstart", handleTouchStart, { passive: true })
-    return () => {
-      document.removeEventListener("touchstart", handleTouchStart)
-    }
-  }, [])
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -1238,16 +1200,6 @@ export function Chat() {
                     >
                       <Mic className="h-5 w-5 text-gray-500" />
                     </Button>
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="rounded-full"
-                      onClick={() => setShowFeatureMenu(!showFeatureMenu)}
-                      data-feature-button
-                    >
-                      <Plus className="h-5 w-5 text-gray-500" />
-                    </Button>
                   </div>
                   <textarea
                     ref={inputRef as React.RefObject<HTMLTextAreaElement>}
@@ -1287,82 +1239,7 @@ export function Chat() {
                   Kuwestiyon AI can make mistakes. Consider checking important information.
                 </div>
               </form>
-              {/* Feature menu dropdown */}
-              {showFeatureMenu && (
-                <div className="absolute bottom-full left-0 mb-2 bg-white border border-gray-200 rounded-lg shadow-lg p-1.5 sm:p-2 z-50 w-[200px] sm:w-[250px] max-w-[95vw] animate-in fade-in-50 slide-in-from-bottom-5 duration-200">
-                  <div className="grid grid-cols-1 gap-0.5 sm:gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsSearchDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Web Search</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsFactCheckDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Fact Check</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsPdfDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <FileText className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>PDF Analysis</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsTranslateDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Languages className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Translate</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={() => {
-                        setIsLinkDialogOpen(true)
-                        setShowFeatureMenu(false)
-                      }}
-                    >
-                      <Link className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Link Scan</span>
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="justify-start text-xs sm:text-sm h-8 hover:bg-gray-100"
-                      onClick={handleDatabaseLookup}
-                    >
-                      <Atom className="h-3.5 w-3.5 sm:h-4 sm:w-4 mr-1.5 sm:mr-2 text-gray-500" />
-                      <span>Database Lookup</span>
-                    </Button>
-                  </div>
-                </div>
-              )}
+
             </div>
           </div>
         </div>
