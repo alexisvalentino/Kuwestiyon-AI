@@ -17,7 +17,7 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files
-.env*
+# .env* (temporarily removed to push env vars)
 
 # vercel
 .vercel
