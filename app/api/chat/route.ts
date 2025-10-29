@@ -384,7 +384,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: "Kuwestiyon API is not available right now. Please try again or choose a different model.
+        content: "Kuwestiyon API is not available right now. Please try again or choose a different model.",
       })
     }
 
@@ -459,7 +459,7 @@ Your response MUST be based on the search results above, not your general knowle
             id: `fallback-${Date.now()}`,
             role: "assistant",
             content:
-              "I encountered an issue connecting to the Kuwestiyon API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model.
+              "I encountered an issue connecting to the Kuwestiyon API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model.",
           })
         }
       } else {
