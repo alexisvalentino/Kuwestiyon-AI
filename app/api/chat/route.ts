@@ -367,7 +367,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: `The model "${selectedModel}" is not supported. Please select a supported model from the settings. (Fallback Mode)`,
+        content: `The model "${selectedModel}" is not supported. Please select a supported model from the settings. `,
       })
     }
 
@@ -376,7 +376,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: "DeepSeek API key is not configured. Please check your environment variables. (Fallback Mode)",
+        content: "DeepSeek API key is not configured. Please check your environment variables. ",
       })
     }
 
@@ -384,7 +384,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: "Gemini API key is not configured. Please check your environment variables. (Fallback Mode)",
+        content: "Kuwestiyon API is not available right now. Please try again or choose a different model.
       })
     }
 
@@ -394,7 +394,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: keywordResponse + " (Fallback Mode - Please check your API keys for Mistral Small or Gemini 1.5 Flash)",
+        content: keywordResponse + " ",
       })
     }
 
@@ -444,7 +444,7 @@ Your response MUST be based on the search results above, not your general knowle
             id: `fallback-${Date.now()}`,
             role: "assistant",
             content:
-              "I encountered an issue connecting to the DeepSeek API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model. (Fallback Mode)",
+              "I encountered an issue connecting to the DeepSeek API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model. ",
           })
         }
       } else if (isGeminiModel) {
@@ -459,7 +459,7 @@ Your response MUST be based on the search results above, not your general knowle
             id: `fallback-${Date.now()}`,
             role: "assistant",
             content:
-              "I encountered an issue connecting to the Gemini API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model. (Fallback Mode)",
+              "I encountered an issue connecting to the Kuwestiyon API. This could be due to an incorrect API key, network issues, or service limitations. Please try again or switch to a different model.
           })
         }
       } else {
@@ -491,7 +491,7 @@ Your response MUST be based on the search results above, not your general knowle
           return NextResponse.json({
             id: `fallback-${Date.now()}`,
             role: "assistant",
-            content: keywordResponse + " (Fallback Mode)",
+            content: keywordResponse + " ",
           })
         }
 
@@ -517,7 +517,7 @@ Your response MUST be based on the search results above, not your general knowle
       return NextResponse.json({
         id: `fallback-${Date.now()}`,
         role: "assistant",
-        content: keywordResponse + " (Fallback Mode)",
+        content: keywordResponse + " ",
       })
     }
   } catch (error: any) {
@@ -525,7 +525,7 @@ Your response MUST be based on the search results above, not your general knowle
     return NextResponse.json({
       id: `fallback-${Date.now()}`,
       role: "assistant",
-      content: getFallbackResponse() + " (Fallback Mode)",
+      content: getFallbackResponse() + " ",
     })
   }
 }
