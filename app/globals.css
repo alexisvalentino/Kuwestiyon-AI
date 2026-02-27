@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --ring: 215 20.2% 65.1%;
+
+    --radius: 0.5rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  .glass-surface {
+    @apply bg-white/60 backdrop-blur-xl border border-white/30 shadow-[0_10px_30px_rgba(0,0,0,0.08)];
+  }
+
+  .glass-surface-soft {
+    @apply bg-white/40 backdrop-blur-xl border border-white/25 shadow-[0_8px_24px_rgba(0,0,0,0.06)];
+  }
+
+  .glass-icon {
+    @apply bg-white/40 hover:bg-white/60 border border-white/30 text-gray-700 shadow-sm;
+  }
+
+  /* Custom thin, rounded scrollbar */
+  .smooth-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #c4c4c4 transparent;
+  }
+
+  .smooth-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .smooth-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .smooth-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #c4c4c4;
+    border-radius: 9999px;
+  }
+
+  .smooth-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #b0b0b0;
+  }
+
+  /* Hide scrollbar (for inner textareas, etc.) */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
