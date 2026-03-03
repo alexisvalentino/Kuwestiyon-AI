@@ -9,13 +9,7 @@ type ChatMessage = {
 
 // Fallback responses in case the LLM is unavailable
 const fallbackResponses = [
-  "I'm currently operating in fallback mode. The AI service is temporarily unavailable.",
-  "Sorry, I can't access my full capabilities right now. Please try again later.",
-  "Hello! I'm currently using pre-programmed responses as the AI service is down.",
-  "The AI service is currently unavailable. I'm using basic responses for now.",
-  "Sorry for the inconvenience, but I'm currently operating with limited functionality.",
-  "I'm currently in offline mode. My responses are pre-programmed.",
-  "The connection to my AI brain is temporarily down. I'll be back to full capacity soon!",
+  "Kuwestiyon AI is currently operating in fallback mode due to temporary system constraints. To access the complete version, please visit the project repository at https://github.com/alexisvalentino/Kuwestiyon-AI, where you may clone and deploy your own fine-tuned model.",
 ]
 
 // Get a random fallback response
@@ -30,17 +24,17 @@ function getKeywordResponse(message: string): string | null {
 
   // Basic greeting patterns
   if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
-    return "Hello! I'm currently in fallback mode, but I can still chat with you using basic responses."
+    return "Hello. Kuwestiyon AI is currently in fallback mode due to system constraints. For full access, please visit: https://github.com/alexisvalentino/Kuwestiyon-AI"
   }
 
   // Help request
   if (lowerMessage.includes("help")) {
-    return "I'm in fallback mode right now. The AI service is temporarily unavailable. You can try again later or ask simple questions."
+    return "Kuwestiyon AI is currently operating in fallback mode. To deploy your own fine-tuned model, please visit the repository at https://github.com/alexisvalentino/Kuwestiyon-AI"
   }
 
   // Thank you responses
   if (lowerMessage.includes("thank") || lowerMessage.includes("thanks")) {
-    return "You're welcome! I'm happy to help even in fallback mode."
+    return "You are welcome. Please note that Kuwestiyon AI is currently in fallback mode. Visit https://github.com/alexisvalentino/Kuwestiyon-AI for the complete version."
   }
 
   // Questions about status
@@ -49,7 +43,7 @@ function getKeywordResponse(message: string): string | null {
     lowerMessage.includes("not working") ||
     lowerMessage.includes("offline")
   ) {
-    return "I'm currently operating in fallback mode because the connection to the AI service is unavailable. This could be due to network issues, API limits, or service maintenance."
+    return "Kuwestiyon AI is in fallback mode due to temporary system constraints. You can clone the project to deploy your own model here: https://github.com/alexisvalentino/Kuwestiyon-AI"
   }
 
   // Return null if no keyword matches, so we can use the random fallback

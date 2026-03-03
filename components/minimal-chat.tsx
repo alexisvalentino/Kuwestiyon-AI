@@ -1,10 +1,21 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { ArrowDown, ArrowUp, Bot, Copy, CornerUpRight, Pencil, Plus, RotateCcw, ThumbsDown, ThumbsUp } from "lucide-react"
+import { ArrowDown, ArrowUp, Bot, Copy, CornerUpRight, Pencil, Plus, RotateCcw, ThumbsDown, ThumbsUp, Trash } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
 
 type Role = "user" | "assistant" | "error"
 
@@ -54,23 +65,33 @@ export function MinimalChat() {
     await new Promise((resolve) => setTimeout(resolve, 1500))
 
     const fallbackTemplates = [
-      "Kumusta! I'm in fallback mode right now. Pasensya na if limited muna responses ko, naka-leave yata 'yung logic modules ko. 🏖️",
-      "Sorry for the inconvenience, but naka-battery saver mode ako today. I'm basically the calculator version of an AI for now. 🔋✨",
-      "Uy! Naka-break muna ang main components ko. Parallel thinking is hard, kaya basics muna tayo today. Chill lang! 🧠💤",
-      "Naka-'Chill Mode' muna ako. May nakalimot kasing i-plug 'yung logic module ko. My bad! Bawi ako next time. 😅🎮",
-      "Beep boop! I'm doing my best pero naka-fallback mode pa ako. Consider me as the 'Lite' version muna today. 🍦📦",
+      "Kuwestiyon AI is currently operating in fallback mode due to temporary system constraints. To access the complete version, please visit the project repository at https://github.com/alexisvalentino/Kuwestiyon-AI, where you may clone and deploy your own fine-tuned model.",
     ]
 
     const randomTemplate = fallbackTemplates[Math.floor(Math.random() * fallbackTemplates.length)]
+    setIsLoading(false)
 
-    const fallbackMessage: Message = {
-      id: `assistant-fallback-${Date.now()}`,
+    // Create a new assistant message with empty content
+    const assistantId = `assistant-fallback-${Date.now()}`
+    const emptyAssistantMessage: Message = {
+      id: assistantId,
       role: "assistant",
-      content: randomTemplate,
+      content: "",
     }
 
-    setMessages((prev) => [...prev, fallbackMessage])
-    setIsLoading(false)
+    setMessages((prev) => [...prev, emptyAssistantMessage])
+
+    // Typing animation logic
+    const typingSpeed = 5 // Milliseconds per character
+    let currentContent = ""
+
+    for (const char of randomTemplate) {
+      currentContent += char
+      setMessages((prev) =>
+        prev.map((msg) => (msg.id === assistantId ? { ...msg, content: currentContent } : msg)),
+      )
+      await new Promise((resolve) => setTimeout(resolve, typingSpeed))
+    }
   }
 
   const handleClearChat = () => {
@@ -126,16 +147,38 @@ export function MinimalChat() {
       {hasMessages && (
         <div className="fixed top-0 left-0 right-0 z-20 bg-background px-6 pt-6 pb-3 flex items-center justify-between">
           <div className="text-base text-gray-600">Conversation</div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8 rounded-full bg-gray-100 text-gray-400 hover:text-white hover:bg-red-500 transition-all duration-200 shadow-sm"
-            onClick={handleClearChat}
-            aria-label="Clear chat"
-          >
-            ✕
-          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 rounded-full bg-gray-50/50 text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all duration-300"
+                aria-label="Clear chat"
+              >
+                <Trash className="h-3.5 w-3.5 stroke-[1.5]" />
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent className="rounded-[2.5rem] bg-white border border-gray-100 shadow-2xl max-w-[400px] p-10">
+              <AlertDialogHeader className="space-y-3">
+                <AlertDialogTitle className="text-2xl font-semibold tracking-tight text-gray-900">Clear conversation?</AlertDialogTitle>
+                <AlertDialogDescription className="text-base text-gray-500 leading-relaxed">
+                  This will permanently delete your chat history. It cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="mt-8 flex flex-col gap-3">
+                <AlertDialogAction
+                  onClick={handleClearChat}
+                  className="w-full rounded-2xl bg-gray-900 text-white hover:bg-black border-none h-12 text-base font-medium transition-all"
+                >
+                  Delete History
+                </AlertDialogAction>
+                <AlertDialogCancel className="w-full rounded-2xl border-none bg-gray-50 text-gray-500 hover:text-gray-900 hover:bg-gray-100 h-12 text-base font-medium transition-all">
+                  Keep Chat
+                </AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </div>
       )}
 
